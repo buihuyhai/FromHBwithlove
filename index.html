@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forever Love</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Poppins:wght@500&display=swap" rel="stylesheet">
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.152.2/build/three.module.js",
+        "three/addons/controls/OrbitControls.js": "https://unpkg.com/three@0.152.2/examples/jsm/controls/OrbitControls.js",
+        "three/examples/jsm/loaders/FontLoader.js": "https://unpkg.com/three@0.152.2/examples/jsm/loaders/FontLoader.js",
+        "three/examples/jsm/geometries/TextGeometry.js": "https://unpkg.com/three@0.152.2/examples/jsm/geometries/TextGeometry.js"
+      }
+    }
+  </script>
+
+  <style>
+    body { margin: 0; overflow: hidden; background-color: black; }
+
+    #player { display: none; }
+
+    #musicButton {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 12px 20px;
+      background-color: #ffffff10;
+      color: white;
+      border: 1px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 9999;
+      font-weight: bold;
+      backdrop-filter: blur(5px);
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    #musicButton:hover {
+      background-color: #ffffff30;
+      transform: scale(1.05);
+    }
+
+    /* Nút "Xem xong..." */
+    #finalButton {
+      position: fixed;
+      left: 20px;
+      bottom: 100px;
+      padding: 12px 20px;
+      background-color: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      transition: all 0.5s ease;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    #finalButton:hover {
+      background-color: rgba(255, 255, 255, 0.35);
+      transform: scale(1.1);
+    }
+
+    /* Dòng chữ nhắc */
+    #hint {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      font-size: 18px;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 6px 12px;
+      border-radius: 8px;
+      z-index: 9999;
+      text-align: center;
+    }
+
+    /* Chữ chạy */
+    #loveMessage {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.6);
+      padding: 25px 40px;
+      border-radius: 20px;
+      color: #ff77ff;
+      font-family: 'Dancing Script', cursive;
+      font-size: 24px;
+      line-height: 1.6;
+      display: none;
+      z-index: 10001;
+      box-shadow: 0 0 20px #ff77ff88;
+      text-align: center;
+      animation: glow 2s infinite alternate;
+      max-width: 90%;
+      max-height: 60vh;
+      overflow-y: auto;
+      word-wrap: break-word;
+      backdrop-filter: blur(5px);
+      scrollbar-width: thin;
+      scrollbar-color: #ffbaff #00000040;
+    }
+
+    #loveMessage::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #loveMessage::-webkit-scrollbar-thumb {
+      background-color: #ffbaff;
+      border-radius: 10px;
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px #ff77ff; }
+      50% { text-shadow: 0 0 20px #ff99ff; }
+      100% { text-shadow: 0 0 10px #ff77ff; }
+    }
+
+    .heart {
+      position: fixed;
+      bottom: 0;
+      color: #ff77ff;
+      animation: floatUp 5s ease-in forwards;
+      font-size: 18px;
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 10002;
+      filter: drop-shadow(0 0 6px #ff99ff);
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-250px) scale(1.8); opacity: 0; }
+    }
+
+    #countdown {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-size: 28px;
+      font-family: 'Poppins', sans-serif;
+      z-index: 10000;
+      display: none;
+      animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+
+    /* Responsive cho điện thoại */
+    @media (max-width: 768px) {
+      #loveMessage {
+        font-size: 20px;
+        line-height: 1.5;
+        padding: 20px;
+        width: 90%;
+        max-height: 65vh;
+      }
+
+      #hint {
+        font-size: 15px;
+        bottom: 5px;
+      }
+
+      #finalButton {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 80px;
+        padding: 10px 16px;
+        font-size: 14px;
+      }
+
+      #countdown {
+        bottom: 120px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="container"></div>
+  <div id="dark-overlay"></div>
+  <div id="info"></div>
+
+  <h1 id="hint">Chạm vào màn hình rồi phóng to để xem nhé bảo bối của tớ!!</h1>
+  <button id="musicButton">HaiBuiNe! 🎵</button>
+  <div id="player"></div>
+
+  <div id="countdown"></div>
+  <button id="finalButton">Xem xong rùi thì ấn vào đây nhé ạ!</button>
+  <div id="loveMessage"></div>
+
+  <script type="module" src="script.js"></script>
+
+  <script>
+    const audio = new Audio("sound/haibuine.mp3");
+    audio.loop = true;
+
+    const musicButton = document.getElementById("musicButton");
+    musicButton.addEventListener("click", () => {
+      audio.play();
+      musicButton.style.display = "none";
+    });
+
+    const countdownEl = document.getElementById("countdown");
+    const finalButton = document.getElementById("finalButton");
+    const loveMessage = document.getElementById("loveMessage");
+
+    const message = `Gửi Hồng Linhhh bảo bối của tớ! ❤️ 
+Thứ 6 này tức ngày 07/11/2025 là ngày đặc biệt của tớ - ngày HB sinh ra trên đời này. 
+Sẽ không có gì hạnh phúc hơn nếu có thể cùng người mà tớ yêu thương có một buổi tối bên nhau. 
+Vì vậy tớ mạn phép xin một chút thời gian của Linhh vào buổi tối hôm ấy nhé ạ! 
+Tớ đơn giản chỉ là muốn dành thời gian đặc biệt của bản thân bên cạnh người đặc biệt của tớ. 
+Trân thành cảm ơn cậu vì đã cho tớ cơ hội được ở cạnh cậu trong suốt thời gian qua và tiếp tục làm tốt hơn trong tương lai. 
+From HaiBui with love <3`;
+
+    document.body.addEventListener("click", () => {
+      let timeLeft = 10;
+      countdownEl.style.display = "block";
+      countdownEl.innerText = timeLeft;
+
+      const timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.innerText = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          countdownEl.style.display = "none";
+          finalButton.style.display = "block";
+        }
+      }, 1000);
+    }, { once: true });
+
+    finalButton.addEventListener("click", () => {
+      finalButton.style.opacity = "0";
+      setTimeout(() => finalButton.remove(), 500);
+      loveMessage.style.display = "block";
+      typeWriter(message, loveMessage, 50);
+      startHearts();
+    });
+
+    function typeWriter(text, element, speed) {
+      let i = 0;
+      function typing() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(typing, speed);
+        }
+      }
+      typing();
+    }
+
+    function startHearts() {
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.innerHTML = "❤";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (4 + Math.random() * 2) + "s";
+        heart.style.fontSize = (16 + Math.random() * 12) + "px";
+
+        const hue = Math.floor(Math.random() * 360);
+        heart.style.color = `hsl(${hue}, 80%, 70%)`;
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+      }, 250);
+    }
+  </script>
+</body>
+</html>

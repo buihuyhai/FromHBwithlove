@@ -1,0 +1,45 @@
+Cách thay đổi mô tả hành tinh Cần có Visual Studio Code hoặc phần mềm tương tự >>
+Thay đổi giao diện ban đầu của Hành tinh
+
+Nhấp chuột phải vào file index.html > Open with > Visual Studio Code.
+
+Ở dòng 57, nhập tên của bạn vào đó (phần ....).
+
+Thay đổi mô tả hành tinh
+
+Nhấp chuột phải vào file script.js > Open with > Visual Studio Code.
+
+Đi đến dòng 588, ở đó có hướng dẫn để thay đổi mô tả của hành tinh.
+
+--- Hoàn tất ---
+
+Cách xuất bản hoặc chia sẻ cho bạn bè/người yêu của bạn:
+
+Mở trình duyệt.
+
+Tạo một tài khoản trên GitHub và hoàn tất quá trình đăng ký.
+
+Nhấp vào nút New (màu xanh lá). Sau đó bạn sẽ được chuyển đến trang tạo Repository mới.
+
+Điền tên repository bằng username tài khoản GitHub của bạn (nếu không biết, hãy nhìn vào ô Owner sẽ thấy username).
+→ Sau đó thêm .github.io vào sau username.
+
+Ví dụ: Miko-Ard.github.io
+
+Phần mô tả có thể bỏ qua. Sau đó nhấp Create Repository (màu xanh lá).
+
+Mở thư mục dự án trước đó, nhấp chuột phải và mở Terminal / CMD, rồi gõ:
+
+git init
+git add .
+git commit -m "first"
+git remote add origin (link repo GitHub của bạn)
+git branch -M main
+git push -u origin main
+
+
+Bây giờ hãy thử truy cập bằng liên kết repository của bạn.
+
+Ví dụ: Miko-Ard.github.io
+
+✅ Hoàn tất!
