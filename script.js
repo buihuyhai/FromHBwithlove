@@ -91,7 +91,7 @@ const galaxyParameters = {
 
 const defaultHeartImages = Array.from(
   { length: 16 },
-  (_, i) => `images/img${i + 1}.jpg`
+  (_, i) => `images/img${i + 1}.png`
 );
 
 const heartImages = [
@@ -695,10 +695,10 @@ scene.add(planet);
 
 //Ganti Deskripsi Planet
 const ringTexts = [
-  "07/11/2003 - 07/11/2025",
+  "21/09/2000 - 21/09/2026",
   "I love you so much",
-  "♡ 阮 红 玲 - Nguyễn Hồng Linhh ♡",
-  "Cậu là cả thế giới của tớ",
+  "♡ 裴芳草 - Bùi Phương Thảo ♡",
+  "Best wishes for you!",
   ...(window.dataCCD && window.dataCCD.data.ringTexts
     ? window.dataCCD.data.ringTexts
     : []),
